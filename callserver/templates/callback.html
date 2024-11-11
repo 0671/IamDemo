@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>回调页面</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 从服务器传来的JWT
+            const token = "{{ token }}"; 
+            if (token) {
+                localStorage.setItem('accessToken', token);
+                window.location.href = '/';
+            } else {
+                console.error('Failed to obtain access token.');
+                alert('认证失败，请重试');
+            }
+        });
+    </script>
+</head>
+<body>
+    <p>处理认证数据...</p>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>授权</title>
+</head>
+<body>
+    <p>这个应用 <strong>{{grant.client.client_name}}</strong> 正在请求:
+        你： <strong>{{ user.username }}</strong>
+        请求的权限：<strong>{{ grant.request.scope }}</strong>
+    </p> 
+   
+    {% if not user %}
+        <p>你还未登陆</p>
+        <a href="{{ url_for('main.login') }}">请登录</a>
+    {% else %}
+    <h1>授权</h1>
+    <form method="post">
+        <p>你（{{ user.username }}）要授权这个应用（{{grant.client.client_name}}）访问你的资源吗 ?</p>
+        <button type="submit" name="confirm" value="yes">同意</button>
+        <button type="submit" name="confirm" value="no">拒绝</button>
+    </form>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎</title>
+</head>
+<body>
+    <h1>欢迎来的 IAM应用</h1>
+
+    {% if current_user.is_authenticated %}
+        <p>你好, {{ current_user.username }}!</p>
+        <a href="{{ url_for('main.logout') }}">登出</a><br>
+        {% if current_user.role == 'admin' %}
+            <a href="{{ url_for('main.admin_page') }}">访问管理员页面</a>
+        {% endif %}
+    {% else %}
+        <p>你未登录</p>
+        <a href="{{ url_for('main.login') }}">登陆</a>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            页面返回消息
+            <ul class=flashes>
+                {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>

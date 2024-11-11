@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>创建Oauth2应用</title>
+</head>
+<body>
+    <h1>创建一个新的Oauth2应用</h1>
+    <form method="post">
+        <label for="client_name">Client Name:</label><input type="text" id="client_name" name="client_name" required><br><br>
+        <label for="client_uri">Client URI:</label><input type="text" id="client_uri" name="client_uri" required><br><br>
+        <label for="scope">Allowed Scope(访问令牌允许执行的操作或访问的资源):</label><input type="text" id="scope" name="scope" required value="profile"><br><br>
+        <label for="redirect_uri">Redirect URIs:</label><textarea name="redirect_uri" cols="30" rows="10"></textarea><br><br>
+        <label>
+            <span>Allowed Grant Types(授权服务器对于客户端获取访问令牌的授权类型):</span>
+            <select name="grant_type" multiple>
+                <option value="authorization_code"  selected>授权码模式</option>
+                <option value="password">密码凭证模式</option>
+                <option value="client_credentials">客户端凭证模式</option>
+                <option value="refresh_token">刷新令牌</option>
+            </select>
+        </label><br><br>
+        <label>
+            <span>Allowed Response Types(客户端从授权服务器获得的响应类型):</span>
+            <select name="response_type" multiple>
+                <option value="code"  selected>授权码</option>
+                <option value="token">访问令牌</option>
+            </select>
+        </label><br><br>
+        <label>
+            <span>Token Endpoint Auth Method:</span>
+            <select name="token_endpoint_auth_method">
+                <option value="client_secret_basic">client_secret_basic</option>
+                <option value="client_secret_post"  selected>client_secret_post</option>
+                <option value="none">none</option>
+            </select>
+        </label><br><br>
+        
+        <button type="submit">点击创建</button>
+    </form>
+    <a href="{{ url_for('main.index') }}">返回首页</a>
+</body>
+</html>

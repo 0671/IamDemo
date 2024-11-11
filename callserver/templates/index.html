@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>应用 {{ appname }}</title>
+    <script>
+        function getToken(){
+            return localStorage.getItem('accessToken') || '';
+        }
+        function authFetch(url, options = {}) {
+            const token = getToken();
+            const defaultHeaders = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            };
+            options.headers = {
+                ...defaultHeaders,
+                ...options.headers
+            };
+            return fetch(url, options)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    throw error;
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusElement = document.getElementById('status');
+            const loginLinkElement = document.getElementById('login-link');
+            const logoutLinkElement = document.getElementById('logout-link');
+
+            const token = getToken();
+
+            if (token!='') {
+                authFetch("{{ url_for('user_info') }}", {
+                    method: 'GET',
+                })
+                .then(data => {
+                    if (data.error) {
+                        localStorage.removeItem('accessToken');
+                        console.error('Error:', data.error);
+                        statusElement.innerText = '你未登陆';
+                        loginLinkElement.style.display = 'block';
+                    } else {
+                        statusElement.innerText = `你好, 用户 ${data.name}`;
+                        logoutLinkElement.style.display = 'block';
+                        loginLinkElement.style.display = 'none';
+
+                        logoutLinkElement.addEventListener('click', function(event) {
+                            event.preventDefault(); // 防止默认行为跳转
+                            authFetch("{{ url_for('logout') }}", {
+                                method: 'POST'
+                            })
+                            .then(data => {
+                                console.log(data);
+                                window.location.reload(true);
+                            })
+                            .catch(error => console.error('Error:', error));
+                        })
+
+                    }
+                })
+                .catch(error => {
+                    localStorage.removeItem('accessToken');
+                    console.error('Error during fetch:', error);
+                    statusElement.innerText = '你未登陆.';
+                    loginLinkElement.style.display = 'block';
+                });
+            } else {
+                statusElement.innerText = '你未登陆.';
+                loginLinkElement.style.display = 'block';
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>欢迎访问应用 {{ appname }}</h1>
+    <p id="status"></p>
+    <a href="{{ url_for('login') }}" id="login-link" style="display: none;">使用Oauth2登陆</a>
+    <a href="#" id="logout-link" style="display: none;">登出</a>
+</body>
+</html>

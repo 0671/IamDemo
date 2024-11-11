@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户与Oauth2应用管理页面</title>
+</head>
+<body>
+    <h1>管理用户与Oauth2应用</h1>
+    <a href="{{ url_for('main.create_user') }}">创建 用户</a> | 
+    <a href="{{ url_for('main.create_client') }}">创建 Oauth2应用</a>
+    <a href="{{ url_for('main.index') }}">返回首页</a>
+    <hr>
+    <h2>用户列表</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>User Id</th>
+                <th>User Name</th>
+                <th>Role</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.role }}</td>
+                <td><a href="{{ url_for('main.delete_user') }}?id={{ user.id }}">删除</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>Oauth2应用列表</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Client ID</th>
+                <th>Client Name</th>
+                <th>Client URL</th>
+                <th>Allowed Grant Types</th>
+                <th>Allowed Response Type</th>
+                <th>Allowed Scope</th>
+                <th>Client Secret</th>
+                <th>Redirect URIs</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clients %}
+                <tr>
+                    <td>{{ client.client_id }}</td>
+                    <td>{{ client.client_name }}</td>
+                    <td><a href="{{ client.client_uri }}">{{ client.client_uri }}</a></td>
+                    <td>{{ client.grant_types }}</td>
+                    <td>{{ client.response_types }}</td>
+                    <td>{{ client.scope }}</td>
+                    <td>{{ client.client_secret }}</td>
+                    <td>{{ client.redirect_uris }}</td>
+                    <td><a href="{{ url_for('main.delete_client') }}?id={{ client.client_id }}">删除</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        页面返回消息
+            <ul class=flashes>
+                {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>
